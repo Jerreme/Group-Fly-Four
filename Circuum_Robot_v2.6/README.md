@@ -1,4 +1,4 @@
-# Intelligent Vacuum Robot v2.5 (Circuum Robot)
+# Intelligent Vacuum Robot v2.6 (Circuum Robot)
 > -Group Fly Four-
 > Joshua Alpapara
 > Mary Lhyn Cañete
@@ -20,7 +20,7 @@
 
 ## Features
 
-- UltraSonic Sensor scans left and right simultaenously then avoid the critical sides.
+- UltraSonic Sensor scans left and right simultaenously that can avoid critical sides and cliffs.
 - Obstacle Avoidance
 - Stair Avoidance
 - Auto on/off Vacuum
