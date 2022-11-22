@@ -2,7 +2,17 @@
 #define Circuum__h
 
 #include "Arduino.h"
-#define Circuum_LIB_VERSION "0.1.1"
+#define Circuum_LIB_VERSION "0.1.2"
+
+// UltraSonic Left
+#define TRIG_PIN A0
+#define ECHO_PIN A1
+// UltraSonic Right
+#define TRIG_PIN2 A2
+#define ECHO_PIN2 A3
+
+#define IR_PIN A4
+#define RELAY_PIN A5
 
 class Circuum
 {
@@ -21,24 +31,13 @@ private:
     unsigned long lapTime_collision = 0;
     unsigned long lapTime_forwarding = 0;
 
-    unsigned short LEFT_DISTANCE;
-    unsigned short RIGHT_DISTANCE;
-
     unsigned short PREV_LEFT_DISTANCE = 0;
     unsigned short PREV_RIGHT_DISTANCE = 0;
-
-    bool lookCliff();
-    void readDistances();
 
     void setSpeeds(unsigned char speed);
     void moveStop(unsigned char stopTime);
     void Turbo(unsigned char speed);
     void turnPump(bool state);
-
-    void moveForward(unsigned char speed);
-    void moveBackward(unsigned char speed, unsigned short backwardTime);
-    void moveLeft(unsigned char speed);
-    void moveRight(unsigned char speed);
 
     void SCAN();
     void EVALUATE();
@@ -51,15 +50,39 @@ private:
     void ENCOUNTERED_STUCK_OBSTACLE();
 
 public:
-    void init(unsigned short milliseconds);
+    Circuum(bool DebugMode);
+    Circuum();
+
+    void init();
     void AUTOMATIC_MODE();
 
     void println(String message);
 
+protected:
+    bool lookCliff();
+    void readDistances();
+
+    void moveForward(unsigned char speed);
+    void moveBackward(unsigned char speed, unsigned short backwardTime);
+    void moveLeft(unsigned char speed);
+    void moveRight(unsigned char speed);
+
+    unsigned short LEFT_DISTANCE;
+    unsigned short RIGHT_DISTANCE;
+};
+
+#define MODE_BACKWARD 0
+#define MODE_FORWARD 1
+#define MODE_LEFT 6
+#define MODE_RIGHT 7
+#define MODE_STOP 9
+
+class CircuumTest : public Circuum
+{
+public:
     void testULTRA();
     void testDYNAMO(unsigned char DIRECTION);
     void testIR();
 };
-
 
 #endif

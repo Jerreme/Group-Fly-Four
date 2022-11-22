@@ -2,14 +2,6 @@
 #include <NewPing.h>
 #include <AFMotor.h>
 
-#define TRIG_PIN A0
-#define ECHO_PIN A1
-#define TRIG_PIN2 A2
-#define ECHO_PIN2 A3
-
-#define IR_PIN A4
-#define RELAY_PIN A5
-
 // DISTANCES
 #define MIN_DISTANCE 12
 #define MAX_DISTANCE 400
@@ -22,20 +14,30 @@ AF_DCMotor right_motor(4);
 
 // SPEEDS
 #define MOTOR_SPEED 32
-#define TURN_ADDITIONAL_SPEED 10
+#define TURN_ADDITIONAL_SPEED 15
 #define TURBO_ADDITIONAL_SPEED 80
-#define RIGHT_ADDITIONAL_SPEED 29 // 25 // Because Right Dynamo is Slower than Left
+#define RIGHT_ADDITIONAL_SPEED 30 // 25 // Because Right Dynamo is Slower than Left
 
 // TIME
-#define BACKWARD_TIME 400
-#define WALL_TURNING_TIME 500
-#define ROTATE_180_TIME 1000
+#define BACKWARD_TIME 600
+#define WALL_TURNING_TIME 800
+#define ROTATE_180_TIME 1600
 #define HESITATE_TIME 200
 
-void Circuum::init(unsigned short milliseconds)
+Circuum::Circuum(bool DebugMode)
+{
+    this->DEBUGMODE = DebugMode;
+}
+
+Circuum::Circuum()
+{
+    this->DEBUGMODE = true;
+}
+
+void Circuum::init()
 {
     setSpeeds(MOTOR_SPEED); // Set Initial Speed
-    moveStop(milliseconds); // Force Stop Circuum
+    moveStop(0);            // Force Stop Circuum
 }
 
 void Circuum::readDistances()
@@ -66,7 +68,7 @@ void Circuum::setSpeeds(unsigned char speed)
 void Circuum::Turbo(unsigned char speed)
 {
     setSpeeds(speed + TURBO_ADDITIONAL_SPEED);
-    delay(100);
+    delay(80);
     setSpeeds(speed);
 }
 
@@ -122,7 +124,7 @@ void Circuum::println(String message)
         Serial.println(message);
 }
 
-// |--------------| AUTO |--------------
+// |--------------| AUTO MODE |--------------
 void Circuum::AUTOMATIC_MODE()
 {
     SCAN();
@@ -152,16 +154,17 @@ void Circuum::EVALUATE()
     // Check Position every 2 seconds
     if ((millis() % 2000) == 0)
     {
-        if (PREV_LEFT_DISTANCE == LEFT_DISTANCE && PREV_RIGHT_DISTANCE == RIGHT_DISTANCE)
-            STUCKED = true;
-        else
-            STUCKED = false;
+        STUCKED = false;
+
+        if (PREV_LEFT_DISTANCE >= (LEFT_DISTANCE - 2) && PREV_LEFT_DISTANCE <= (LEFT_DISTANCE + 2))
+            if (PREV_RIGHT_DISTANCE >= (RIGHT_DISTANCE - 2) && PREV_RIGHT_DISTANCE <= (RIGHT_DISTANCE + 2))
+                STUCKED = true;
 
         PREV_LEFT_DISTANCE = LEFT_DISTANCE;
         PREV_RIGHT_DISTANCE = RIGHT_DISTANCE;
         return;
     }
-    
+
     // Obstacle Approaching
     if (LEFT_DISTANCE < MIN_DISTANCE || RIGHT_DISTANCE < MIN_DISTANCE)
     {
@@ -315,19 +318,14 @@ void Circuum::ENCOUNTERED_STUCK_OBSTACLE()
 }
 
 // |--------------| Hardware Test |--------------
-#define MODE_BACKWARD 0
-#define MODE_FORWARD 1
-#define MODE_LEFT 6
-#define MODE_RIGHT 7
-#define MODE_STOP 9
 
-void Circuum::testULTRA()
+void CircuumTest::testULTRA()
 {
     readDistances();
     println("L: " + String(LEFT_DISTANCE) + " | R:" + String(RIGHT_DISTANCE));
 }
 
-void Circuum::testDYNAMO(unsigned char DIRECTION)
+void CircuumTest::testDYNAMO(unsigned char DIRECTION)
 {
     if (DIRECTION == MODE_FORWARD)
         moveForward(MOTOR_SPEED);
@@ -339,7 +337,7 @@ void Circuum::testDYNAMO(unsigned char DIRECTION)
         moveRight(MOTOR_SPEED);
 }
 
-void Circuum::testIR()
+void CircuumTest::testIR()
 {
-    println("IR: " + String(digitalRead(IR_PIN)));
+    println("IR: " + String(lookCliff()));
 }

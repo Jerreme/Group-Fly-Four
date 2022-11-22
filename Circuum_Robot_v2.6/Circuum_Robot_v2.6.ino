@@ -1,9 +1,5 @@
 #include <Circuum.h>
-
-Circuum crm(true);  // On DebugMode (displays reading to serial monitor)
-
-#define IR_PIN A4
-#define RELAY_PIN A5
+Circuum circuum(true);  // On = DebugMode (displays reading to serial monitor)
 
 void setup() {
   Serial.begin(9600);
@@ -13,10 +9,10 @@ void setup() {
 
   digitalWrite(RELAY_PIN, LOW);  // Pulled Low Vacuum Relay
 
-  crm.init();   // Initialize Circuum
+  circuum.init();   // Initialize Circuum
   delay(3000);  // Boot Time
 }
 
 void loop() {
-  crm.AUTOMATIC_MODE();
+  circuum.AUTOMATIC_MODE();
 }

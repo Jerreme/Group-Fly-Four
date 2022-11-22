@@ -1,0 +1,37 @@
+#######################################
+# Library to perform actions of Circuum Robot
+#######################################
+
+#######################################
+# Library that contains the Algorithm for avoiding obstacle and cliff
+#######################################
+
+Circuum		KEYWORD1
+CircuumTest	KEYWORD1
+
+#######################################
+# Methods and Functions for Circuum (KEYWORD2)
+#######################################
+
+Circuum		KEYWORD2
+init			KEYWORD2
+AUTOMATIC_MODE	KEYWORD2
+println		KEYWORD2
+
+#######################################
+# Methods and Functions for CircuumTest (KEYWORD3)
+#######################################
+
+testULTRA		KEYWORD3
+testDYNAMO	KEYWORD3
+testIR		KEYWORD3
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+MODE_BACKWARD	LITERAL1
+MODE_FORWARD	LITERAL1
+MODE_LEFT	LITERAL1
+MODE_RIGHT	LITERAL1
+MODE_STOP	LITERAL1
