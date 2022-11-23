@@ -24,6 +24,7 @@ private:
     bool COLLIDE = false;
     bool CLIFF = false;
     bool STUCKED = false;
+    bool VACUUM = false;
 
     int collision_streak_count = 0;
     const int collision_streak_trigger = 3;
@@ -35,7 +36,7 @@ private:
     unsigned short PREV_RIGHT_DISTANCE = 0;
 
     void setSpeeds(unsigned char speed);
-    void moveStop(unsigned char stopTime);
+    void moveStop(unsigned short stopTime);
     void Turbo(unsigned char speed);
     void turnPump(bool state);
 
@@ -55,6 +56,7 @@ public:
 
     void init();
     void AUTOMATIC_MODE();
+    void SHUTDOWN();
 
     void println(String message);
 

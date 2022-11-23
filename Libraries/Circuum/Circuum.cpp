@@ -94,7 +94,7 @@ void Circuum::moveRight(unsigned char speed)
     right_motor.run(BACKWARD);
 }
 
-void Circuum::moveStop(unsigned char stopTime)
+void Circuum::moveStop(unsigned short stopTime)
 {
     left_motor.run(RELEASE);
     right_motor.run(RELEASE);
@@ -118,6 +118,12 @@ void Circuum::turnPump(bool state)
     digitalWrite(RELAY_PIN, state);
 }
 
+void Circuum::SHUTDOWN()
+{
+    moveStop(2000);
+    VACUUM = false;
+    turnPump(false);
+}
 void Circuum::println(String message)
 {
     if (DEBUGMODE)
@@ -184,10 +190,17 @@ void Circuum::EVALUATE()
 
 void Circuum::DECISION()
 {
+    // Turn Pump On if Not
+    if (!VACUUM)
+    {
+        VACUUM = true;
+        turnPump(true);
+    }
+
     // Cliff Detected, Execute Behavior
     if (CLIFF)
     {
-        turnPump(false);
+        // turnPump(false);
         ENCOUNTERED_CLIFF_OBSTACLE();
 
         CLIFF = false;
@@ -197,7 +210,7 @@ void Circuum::DECISION()
     // Circuum is stuck in a corner
     if (collision_streak_count == collision_streak_trigger)
     {
-        turnPump(false);
+        // turnPump(false);
         ENCOUNTERED_CLIFF_OBSTACLE();
 
         collision_streak_count = 0;
@@ -207,7 +220,7 @@ void Circuum::DECISION()
     // Circuum Stucked in a place
     if (STUCKED)
     {
-        turnPump(false);
+        // turnPump(false);
         ENCOUNTERED_STUCK_OBSTACLE();
 
         STUCKED = false;
@@ -218,7 +231,7 @@ void Circuum::DECISION()
     while (COLLIDE)
     {
         SCAN();
-        turnPump(false);
+        // turnPump(false);
 
         if (LEFT_DISTANCE < MIN_OFFSET_DISTANCE || RIGHT_DISTANCE < MIN_OFFSET_DISTANCE)
         {
@@ -266,7 +279,7 @@ void Circuum::DECISION()
     {
         if ((millis() - lapTime_forwarding) >= 1000)
         {
-            turnPump(true);
+            // turnPump(true);
         }
     }
 }
